@@ -6,12 +6,12 @@ import coremltools as ct
 from models import *
 from models.efficientformer import Attention
 from models.efficientformer_v2 import Attention4D, Attention4DDownsample
-import timm
+from models.net import DGCNet
 
 
 def parse():
     parser = argparse.ArgumentParser(description='EfficientFormer Toolbox')
-    parser.add_argument('--model', metavar='ARCH', default='efficientformerv2_l')
+    # parser.add_argument('--model', metavar='ARCH', default='efficientformerv2_l')
     parser.add_argument('--ckpt', default='weights/eformer_l_450.pth', type=str, metavar='PATH',
                         help='path to checkpoint')
     parser.add_argument('--profile', action='store_true', default=True,
@@ -89,8 +89,9 @@ class ProfileConv(nn.Module):
 
 if __name__ == '__main__':
     args = parse()
-    model_name = eval(args.model)
-    model = model_name(resolution=args.resolution)
+    model = DGCNet()
+    # model_name = eval(args.model)
+    # model = model_name(resolution=args.resolution)
     try:
         model.load_state_dict(torch.load(args.ckpt, map_location='cpu')['model'])
         print('load success, model is initialized with pretrained checkpoint')
